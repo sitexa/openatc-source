@@ -1,0 +1,41 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/logicctl.dir/LogicCtlActuate.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlActuate.cpp.o.d"
+  "CMakeFiles/logicctl.dir/LogicCtlActuateAdaptive.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlActuateAdaptive.cpp.o.d"
+  "CMakeFiles/logicctl.dir/LogicCtlActuatePedCrossStreet.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlActuatePedCrossStreet.cpp.o.d"
+  "CMakeFiles/logicctl.dir/LogicCtlAllRed.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlAllRed.cpp.o.d"
+  "CMakeFiles/logicctl.dir/LogicCtlCablelessLine.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlCablelessLine.cpp.o.d"
+  "CMakeFiles/logicctl.dir/LogicCtlChannelCheck.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlChannelCheck.cpp.o.d"
+  "CMakeFiles/logicctl.dir/LogicCtlFixedTime.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlFixedTime.cpp.o.d"
+  "CMakeFiles/logicctl.dir/LogicCtlLampOff.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlLampOff.cpp.o.d"
+  "CMakeFiles/logicctl.dir/LogicCtlManual.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlManual.cpp.o.d"
+  "CMakeFiles/logicctl.dir/LogicCtlMode.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlMode.cpp.o.d"
+  "CMakeFiles/logicctl.dir/LogicCtlModeSimpleFactory.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlModeSimpleFactory.cpp.o.d"
+  "CMakeFiles/logicctl.dir/LogicCtlOptim.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlOptim.cpp.o.d"
+  "CMakeFiles/logicctl.dir/LogicCtlPedCrossStreet.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlPedCrossStreet.cpp.o.d"
+  "CMakeFiles/logicctl.dir/LogicCtlPreempt.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlPreempt.cpp.o.d"
+  "CMakeFiles/logicctl.dir/LogicCtlWebsterOptim.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlWebsterOptim.cpp.o.d"
+  "CMakeFiles/logicctl.dir/LogicCtlYellowFlash.cpp.o"
+  "CMakeFiles/logicctl.dir/LogicCtlYellowFlash.cpp.o.d"
+  "liblogicctl.a"
+  "liblogicctl.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/logicctl.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

@@ -1,0 +1,322 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "OpenATCManager/comctl/libcomctl.a"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"add_definitions",
+			"INCLUDE_DIRECTORIES",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"OpenATCManager/comctl/CMakeLists.txt",
+			"OpenATCManager/CMakeLists.txt",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 5,
+				"parent" : 0
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 11,
+				"parent" : 2
+			},
+			{
+				"file" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 36,
+				"parent" : 4
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 39,
+				"parent" : 4
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 42,
+				"parent" : 4
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 46,
+				"parent" : 4
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 50,
+				"parent" : 4
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 53,
+				"parent" : 4
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 58,
+				"parent" : 4
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 72,
+				"parent" : 4
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 14,
+				"parent" : 2
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -fPIC"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 3,
+					"define" : "CANOPEN_MASTER"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 5,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/3d_part/tinyxml"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/3d_part/cjson"
+				},
+				{
+					"backtrace" : 7,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/3d_part/rapidjson"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/3d_part/RapidjsonHelper"
+				},
+				{
+					"backtrace" : 9,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/3d_part/libintl-lite"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/build/include"
+				},
+				{
+					"backtrace" : 11,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/build/external/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/Include"
+				},
+				{
+					"backtrace" : 13,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/OpenATCManager/../Include"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					1
+				],
+				"standard" : "11"
+			},
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15
+			]
+		}
+	],
+	"id" : "comctl::@5922fc9ca13df373fe87",
+	"name" : "comctl",
+	"nameOnDisk" : "libcomctl.a",
+	"paths" : 
+	{
+		"build" : "OpenATCManager/comctl",
+		"source" : "OpenATCManager/comctl"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCCameraDataPackUnpack.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCCenterCommHandlerSimpleFactory.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCCfgCommHelper.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCComWithControlCenterImpl.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCCommWithCameraListenThread.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCCommWithCameraThread.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCCommWithCenterThread.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCCommWithCfgSWThread.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCCommWithGB20999Thread.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCCommWithITS300Thread.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCDataPackUnpack.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCGB20999DataPackUnpack.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCITS300DataPackUnpack.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCMd5.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCPackUnpackSimpleFactory.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/comctl/OpenATCSocket.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

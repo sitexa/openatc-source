@@ -1,0 +1,6 @@
+<Config>  
+	<CfgPort>11111</CfgPort> 
+	<DetectorPort>20030</DetectorPort> 
+	<SimulateIP>192.168.14.168</SimulateIP> 
+	<SimulatePort>6667</SimulatePort> 
+</Config>  

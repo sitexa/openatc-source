@@ -1,0 +1,14 @@
+#set c
+
+SET(CMAKE_SYSTEM_NAME Linux) 
+SET(TOOLCHAIN_DIR "/opt/arm-linux-gnueabihf-4.7")
+SET(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_DIR})
+SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+
+SET(CMAKE_C_COMPILER ${TOOLCHAIN_DIR}/bin/arm-linux-gnueabihf-gcc)
+SET(CMAKE_CXX_COMPILER ${TOOLCHAIN_DIR}/bin/arm-linux-gnueabihf-g++)
+SET(CMAKE_LD ${TOOLCHAIN_DIR}/bin/arm-linux-gnueabihf-ld)
+
+message("------------ Using arm-linux-gnueabihf Cross Compiler --------------")

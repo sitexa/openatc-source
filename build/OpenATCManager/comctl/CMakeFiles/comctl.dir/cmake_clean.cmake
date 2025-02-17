@@ -1,0 +1,41 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/comctl.dir/OpenATCCameraDataPackUnpack.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCCameraDataPackUnpack.cpp.o.d"
+  "CMakeFiles/comctl.dir/OpenATCCenterCommHandlerSimpleFactory.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCCenterCommHandlerSimpleFactory.cpp.o.d"
+  "CMakeFiles/comctl.dir/OpenATCCfgCommHelper.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCCfgCommHelper.cpp.o.d"
+  "CMakeFiles/comctl.dir/OpenATCComWithControlCenterImpl.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCComWithControlCenterImpl.cpp.o.d"
+  "CMakeFiles/comctl.dir/OpenATCCommWithCameraListenThread.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCCommWithCameraListenThread.cpp.o.d"
+  "CMakeFiles/comctl.dir/OpenATCCommWithCameraThread.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCCommWithCameraThread.cpp.o.d"
+  "CMakeFiles/comctl.dir/OpenATCCommWithCenterThread.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCCommWithCenterThread.cpp.o.d"
+  "CMakeFiles/comctl.dir/OpenATCCommWithCfgSWThread.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCCommWithCfgSWThread.cpp.o.d"
+  "CMakeFiles/comctl.dir/OpenATCCommWithGB20999Thread.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCCommWithGB20999Thread.cpp.o.d"
+  "CMakeFiles/comctl.dir/OpenATCCommWithITS300Thread.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCCommWithITS300Thread.cpp.o.d"
+  "CMakeFiles/comctl.dir/OpenATCDataPackUnpack.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCDataPackUnpack.cpp.o.d"
+  "CMakeFiles/comctl.dir/OpenATCGB20999DataPackUnpack.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCGB20999DataPackUnpack.cpp.o.d"
+  "CMakeFiles/comctl.dir/OpenATCITS300DataPackUnpack.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCITS300DataPackUnpack.cpp.o.d"
+  "CMakeFiles/comctl.dir/OpenATCMd5.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCMd5.cpp.o.d"
+  "CMakeFiles/comctl.dir/OpenATCPackUnpackSimpleFactory.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCPackUnpackSimpleFactory.cpp.o.d"
+  "CMakeFiles/comctl.dir/OpenATCSocket.cpp.o"
+  "CMakeFiles/comctl.dir/OpenATCSocket.cpp.o.d"
+  "libcomctl.a"
+  "libcomctl.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/comctl.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

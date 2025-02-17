@@ -1,0 +1,301 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4,
+						5
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"build" : "3d_part/tinyxml",
+					"jsonFile" : "directory-3d_part.tinyxml-Debug-dc5bc493fd702969303c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "3d_part/tinyxml",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"build" : "3d_part/cjson",
+					"jsonFile" : "directory-3d_part.cjson-Debug-a8b2a32727bc4959a31c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "3d_part/cjson",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "3d_part/RapidjsonHelper",
+					"jsonFile" : "directory-3d_part.RapidjsonHelper-Debug-3148129ca566f3bde99b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 3,
+					"source" : "3d_part/RapidjsonHelper",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "3d_part/libintl-lite",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-3d_part.libintl-lite-Debug-d409a3ae1430384a9ce7.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 4,
+					"source" : "3d_part/libintl-lite",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "OpenATCManager",
+					"childIndexes" : 
+					[
+						6,
+						7
+					],
+					"jsonFile" : "directory-OpenATCManager-Debug-2844113de4e6182a9f7d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 5,
+					"source" : "OpenATCManager",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "OpenATCManager/comctl",
+					"jsonFile" : "directory-OpenATCManager.comctl-Debug-be6f33f50bcf883a095a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 5,
+					"source" : "OpenATCManager/comctl",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "OpenATCManager/logicctl",
+					"jsonFile" : "directory-OpenATCManager.logicctl-Debug-e1a32d290bb4b86ad087.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 5,
+					"source" : "OpenATCManager/logicctl",
+					"targetIndexes" : 
+					[
+						5
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4,
+						5
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "OpenATC",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "tinyxml",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "cjson",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3
+					],
+					"name" : "RapidjsonHelper",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						4
+					],
+					"name" : "LibIntl",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5,
+						6,
+						7
+					],
+					"name" : "OpenATCTest",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						0,
+						3,
+						5
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 5,
+					"id" : "OpenATCMainCtlManager::@2e304ec50ec76e033eeb",
+					"jsonFile" : "target-OpenATCMainCtlManager-Debug-2a1287b56522abd4192a.json",
+					"name" : "OpenATCMainCtlManager",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "RapidjsonHelper::@53fb41dbefaea6e8c4de",
+					"jsonFile" : "target-RapidjsonHelper-Debug-e5b0605ef5101b61a7fa.json",
+					"name" : "RapidjsonHelper",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "cjson::@13c9ffbfe3afabddde47",
+					"jsonFile" : "target-cjson-Debug-e1557be3dfc058fd8894.json",
+					"name" : "cjson",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "comctl::@5922fc9ca13df373fe87",
+					"jsonFile" : "target-comctl-Debug-7628408b108027eea981.json",
+					"name" : "comctl",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "intl::@bc66ccc774042faf1063",
+					"jsonFile" : "target-intl-Debug-e80d17fa33aa35773e00.json",
+					"name" : "intl",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "logicctl::@08e2e6c16d444ef00cb0",
+					"jsonFile" : "target-logicctl-Debug-9a7a44a630126bd977c3.json",
+					"name" : "logicctl",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "tinyxml::@93c8d401f741f40c3267",
+					"jsonFile" : "target-tinyxml-Debug-e0870d31aee752d3f446.json",
+					"name" : "tinyxml",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "version::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-version-Debug-a93f7ec985cfb09882d4.json",
+					"name" : "version",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/build",
+		"source" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

@@ -1,0 +1,427 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "OpenATCManager/OpenATCManager/OpenATCMainCtlManager"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"ADD_EXECUTABLE",
+			"link_directories",
+			"LINK_DIRECTORIES",
+			"TARGET_LINK_LIBRARIES",
+			"add_dependencies",
+			"add_definitions",
+			"INCLUDE_DIRECTORIES",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"OpenATCManager/CMakeLists.txt",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 69,
+				"parent" : 0
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 59,
+				"parent" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 57,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 65,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 72,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 1,
+				"line" : 83,
+				"parent" : 2
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 11,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 24,
+				"parent" : 0
+			},
+			{
+				"command" : 6,
+				"file" : 1,
+				"line" : 36,
+				"parent" : 2
+			},
+			{
+				"command" : 6,
+				"file" : 1,
+				"line" : 39,
+				"parent" : 2
+			},
+			{
+				"command" : 6,
+				"file" : 1,
+				"line" : 42,
+				"parent" : 2
+			},
+			{
+				"command" : 6,
+				"file" : 1,
+				"line" : 46,
+				"parent" : 2
+			},
+			{
+				"command" : 6,
+				"file" : 1,
+				"line" : 50,
+				"parent" : 2
+			},
+			{
+				"command" : 7,
+				"file" : 1,
+				"line" : 53,
+				"parent" : 2
+			},
+			{
+				"command" : 7,
+				"file" : 1,
+				"line" : 58,
+				"parent" : 2
+			},
+			{
+				"command" : 6,
+				"file" : 1,
+				"line" : 72,
+				"parent" : 2
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 14,
+				"parent" : 0
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 49,
+				"parent" : 0
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 74,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g -g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -fPIE"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 8,
+					"define" : "CANOPEN_MASTER"
+				},
+				{
+					"backtrace" : 9,
+					"define" : "_LINUX_"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 10,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/3d_part/tinyxml"
+				},
+				{
+					"backtrace" : 11,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/3d_part/cjson"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/3d_part/rapidjson"
+				},
+				{
+					"backtrace" : 13,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/3d_part/RapidjsonHelper"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/3d_part/libintl-lite"
+				},
+				{
+					"backtrace" : 15,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/build/include"
+				},
+				{
+					"backtrace" : 16,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/build/external/include"
+				},
+				{
+					"backtrace" : 17,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/Include"
+				},
+				{
+					"backtrace" : 18,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/OpenATCManager/../Include"
+				},
+				{
+					"backtrace" : 19,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/OpenATCManager/Include"
+				},
+				{
+					"backtrace" : 20,
+					"path" : "/Users/xnpeng/RustroverProjects/OpenATCManager/Source/OpenATCManager/Source"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					1
+				],
+				"standard" : "11"
+			},
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 7,
+			"id" : "version::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "cjson::@13c9ffbfe3afabddde47"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "RapidjsonHelper::@53fb41dbefaea6e8c4de"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "intl::@bc66ccc774042faf1063"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "comctl::@5922fc9ca13df373fe87"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "logicctl::@08e2e6c16d444ef00cb0"
+		}
+	],
+	"id" : "OpenATCMainCtlManager::@2e304ec50ec76e033eeb",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g -g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "-L/Users/xnpeng/RustroverProjects/OpenATCManager/Source/build/external/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "-L/Users/xnpeng/RustroverProjects/OpenATCManager/Source/build/OpenATCManager/../Lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-L/Users/xnpeng/RustroverProjects/OpenATCManager/Source/build_arm/external/lib",
+				"role" : "libraryPath"
+			},
+			{
+				"fragment" : "-Wl,-rpath,/Users/xnpeng/RustroverProjects/OpenATCManager/Source/build/external/lib -Wl,-rpath,/Users/xnpeng/RustroverProjects/OpenATCManager/Source/build/OpenATCManager/../Lib -Wl,-rpath,/Users/xnpeng/RustroverProjects/OpenATCManager/Source/build_arm/external/lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lCommonLog",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lOpenATCTZParam",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lOpenATCGlobalStatus",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lOpenATCFaultProc",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lOpenATCCanBusProc",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lOpenATCMainCtlSource",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "../3d_part/libintl-lite/libintl.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lpthread",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-lrt",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "comctl/libcomctl.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "logicctl/liblogicctl.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "../3d_part/cjson/libcjson.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "../3d_part/RapidjsonHelper/libRapidjsonHelper.a",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "OpenATCMainCtlManager",
+	"nameOnDisk" : "OpenATCMainCtlManager",
+	"paths" : 
+	{
+		"build" : "OpenATCManager",
+		"source" : "OpenATCManager"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/OpenATCComCtlManager.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/OpenATCFlowProcLog.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/OpenATCFlowProcManager.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/OpenATCLogicCtlManager.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/OpenATCManager.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "OpenATCManager/OpenATCOperationRecord.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "EXECUTABLE"
+}

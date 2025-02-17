@@ -1,0 +1,2 @@
+/usr/bin/ar qc libintl.a CMakeFiles/intl.dir/internal/libintl.cpp.o
+/usr/bin/ranlib libintl.a
