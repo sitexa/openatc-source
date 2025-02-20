@@ -1,0 +1,1 @@
+tokio::sync::MutexGuard<'_, HashMap<fault::types::FaultType, fault::types::FaultSeverity>>
