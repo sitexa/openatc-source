@@ -1,42 +1,33 @@
-use super::{error::{HardwareError, HardwareResult}, types::*};
+use super::{error::{HardwareError, HardwareResult}, types::HardwareConfig};
+use crate::hardware::params::{HardwareParameter};  // 使用完整路径
 use crate::communication::can::CanConnection;
+use crate::hardware::types::HardwareValue;
 use tokio::sync::Mutex;
 use std::sync::Arc;
 use tracing::{info, error};
 use crate::communication::CanMessage;
 use crate::control::PhaseState;
-use crate::hardware::monitor::DeviceMonitor;
+use crate::hardware::monitor::HardwareMonitor;
+use crate::hardware::status::HardwareStatus;  // 明确导入 HardwareStatus
 use crate::hardware::params::ParameterStore;
-
 pub struct HardwareManager {
-    config: Arc<Mutex<HardwareConfig>>,
-    can_connection: Arc<Mutex<CanConnection>>,
-    status: Arc<Mutex<DeviceStatus>>,
-    monitor: Arc<DeviceMonitor>,
-    params: Arc<Mutex<ParameterStore>>,
-}
-
-#[derive(Debug, Clone)]
-pub struct DeviceStatus {
-    pub is_connected: bool,
-    pub last_heartbeat: std::time::SystemTime,
-    pub error_count: u32,
+    pub(crate) config: Arc<Mutex<HardwareConfig>>,
+    pub(crate) can_connection: Arc<Mutex<CanConnection>>,
+    pub(crate) status: Arc<Mutex<HardwareStatus>>,  // 改名
+    pub(crate) monitor: Arc<HardwareMonitor>,  // 改名
+    pub(crate) params: Arc<Mutex<ParameterStore>>,
 }
 
 impl HardwareManager {
     pub async fn new(config: HardwareConfig) -> HardwareResult<Self> {
-        let monitor = DeviceMonitor::new(config.device_id.clone());
+        let monitor = HardwareMonitor::new(config.hardware_id.clone());
         let params = Arc::new(Mutex::new(ParameterStore::new()));
 
         let can_connection = CanConnection::new(&config.can_interface)
             .await
             .map_err(|e| HardwareError::InitializationError(e.to_string()))?;
 
-        let status = DeviceStatus {
-            is_connected: false,
-            last_heartbeat: std::time::SystemTime::now(),
-            error_count: 0,
-        };
+        let status = HardwareStatus::new(config.hardware_id.clone());
 
         Ok(Self {
             config: Arc::new(Mutex::new(config)),
@@ -59,16 +50,16 @@ impl HardwareManager {
         }
         Ok(())
     }
-    pub async fn update_parameter(&self, name: &str, value: ParameterValue) -> HardwareResult<()> {
+    pub async fn update_parameter(&self, name: &str, value: HardwareValue) -> HardwareResult<()> {
         let mut params = self.params.lock().await;
         params.validate_parameter(name, &value)?;
-    
+
         // 先获取所需信息
         let param_id = match params.get_parameter_definition(name) {
             Some(def) => def.id,
             None => return Err(HardwareError::ParameterError(format!("参数未定义: {}", name))),
         };
-    
+
         // 创建 CAN 消息
         let can_msg = CanMessage {
             id: 0x200 + param_id,
@@ -76,41 +67,40 @@ impl HardwareManager {
             extended: false,
             rtr: false,
         };
-    
+
         // 更新参数值
         params.set_value(name, value.clone())?;
-    
+
         // 发送 CAN 消息
         self.can_connection.lock().await
             .send_message(can_msg)
             .await
             .map_err(|e| HardwareError::CommunicationError(e.to_string()))?;
-    
+
         // 保存配置
         params.save_to_file("params.json")?;
         info!("参数已更新: {} = {:?}", name, value);
         Ok(())
     }
-    async fn create_parameter_message(&self, param: &Parameter) -> HardwareResult<CanMessage> {
-        // Create a simple parameter update message
+    async fn create_parameter_message(&self, param: &HardwareParameter) -> HardwareResult<CanMessage> {
         let mut data = Vec::with_capacity(6);
         data.extend_from_slice(&param.id.to_le_bytes());
 
         match &param.value {
-            ParameterValue::Integer(v) => {
-                data.push(1); // type identifier for integer
+            HardwareValue::Integer(v) => {
+                data.push(1);
                 data.extend_from_slice(&(*v as i32).to_le_bytes());
             }
-            ParameterValue::Float(v) => {
-                data.push(2); // type identifier for float
+            HardwareValue::Float(v) => {
+                data.push(2);
                 data.extend_from_slice(&(*v as f32).to_le_bytes());
             }
-            ParameterValue::Boolean(v) => {
-                data.push(3); // type identifier for boolean
+            HardwareValue::Boolean(v) => {
+                data.push(3);
                 data.push(if *v { 1 } else { 0 });
             }
-            ParameterValue::String(v) => {
-                data.push(4); // type identifier for string
+            HardwareValue::String(v) => {
+                data.push(4);
                 data.extend_from_slice(v.as_bytes());
             }
         }
@@ -123,36 +113,35 @@ impl HardwareManager {
         })
     }
 
-    fn serialize_parameter_value(&self, param_id: &u32, value: ParameterValue) -> Vec<u8> {
+    fn serialize_parameter_value(&self, param_id: &u32, value: HardwareValue) -> Vec<u8> {
         let mut data = Vec::with_capacity(8);
         data.extend_from_slice(&param_id.to_le_bytes());
 
         match value {
-            ParameterValue::Integer(v) => {
-                data.push(1); // 整数类型标识
-                data.extend_from_slice(&v.to_le_bytes()[..4]); // 取前4字节
+            HardwareValue::Integer(v) => {
+                data.push(1);
+                data.extend_from_slice(&v.to_le_bytes()[..4]);
             }
-            ParameterValue::Float(v) => {
-                data.push(2); // 浮点数类型标识
+            HardwareValue::Float(v) => {
+                data.push(2);
                 data.extend_from_slice(&v.to_le_bytes());
             }
-            ParameterValue::Boolean(v) => {
-                data.push(3); // 布尔类型标识
+            HardwareValue::Boolean(v) => {
+                data.push(3);
                 data.push(if v { 1 } else { 0 });
             }
-            ParameterValue::String(v) => {
-                data.push(4); // 字符串类型标识
-                data.extend(v.as_bytes().iter().take(7)); // 最多取7个字节
+            HardwareValue::String(v) => {
+                data.push(4);
+                data.extend(v.as_bytes().iter().take(7));
             }
         }
-
         data
     }
 
     pub async fn update_phase_output(&self, phase_id: u32, state: PhaseState) -> HardwareResult<()> {
         // 将相位状态转换为CAN消息
         let message = self.create_phase_output_message(phase_id, state)?;
-        
+
         // 通过CAN总线发送消息
         self.can_connection.lock().await
             .send_message(message)
@@ -166,7 +155,7 @@ impl HardwareManager {
     fn create_phase_output_message(&self, phase_id: u32, state: PhaseState) -> HardwareResult<CanMessage> {
         let mut data = Vec::with_capacity(2);
         data.push(phase_id as u8);
-        
+
         let state_byte = match state {
             PhaseState::Red => 0x01,
             PhaseState::Yellow => 0x02,

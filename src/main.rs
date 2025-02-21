@@ -1,20 +1,26 @@
 use std::sync::Arc;
-use tokio::time::{Duration, interval};
+use std::time::SystemTime;
+use chrono::format::Numeric::Timestamp;
+use tokio::time::Duration;
 use tracing::{info, error, Level};
 use tracing_subscriber::FmtSubscriber;
 
-use hardware::{HardwareManager, types::{HardwareConfig, DeviceType}};
-use control::ControlManager;
+use control::{ControlManager, types::{ControlMode, PhaseState}};
 use fault::{FaultManager, types::{FaultConfig, FaultType, FaultSeverity}};
 use storage::{StorageManager, types::StorageConfig};
 use monitor::MonitorManager;
-use interface::web::WebServer;
+use crate::storage::{DetectorData, PhaseStateData, SignalData};
+use hardware::{
+    HardwareManager, 
+    HardwareConfig, 
+    HardwareType,
+    HardwareValue,
+};
 
 pub mod hardware;
 pub mod control;
 pub mod communication;
 pub mod fault;
-// 删除 pub mod config;
 pub mod storage;
 pub mod monitor;
 pub mod coordination;
@@ -28,79 +34,79 @@ async fn main() {
         .with_max_level(Level::DEBUG)
         .init();
 
-    info!("OpenATC 系统启动...");
+    info!("开始功能测试...");
 
+    // 3. 测试故障管理
+    info!("测试故障管理...");
     let fault = Arc::new(FaultManager::new(FaultConfig {
         max_events: 1000,
         auto_resolve_timeout: Some(Duration::from_secs(3600)),
         notification_enabled: true,
     }));
 
-    let hardware = match HardwareManager::new(hardware::types::HardwareConfig {
-        device_id: "".to_string(),
-        device_type: DeviceType::TrafficLight,
-        can_interface: "can0".to_string(),
-        parameters: Default::default(),
-    }).await {
-        Ok(hw) => Arc::new(hw),
-        Err(e) => {
-            error!("硬件管理器初始化失败: {}", e);
-            return;
-        }
-    };
+    // 报告测试故障
+    let fault_id = fault.report_fault(
+        FaultType::System,
+        FaultSeverity::Minor,
+        "测试故障".to_string(),
+    ).await.expect("故障报告失败");
 
-    let control = Arc::new(ControlManager::new(hardware.clone()));
-    if let Err(e) = control.initialize().await {
-        error!("控制管理器初始化失败: {}", e);
-        return;
-    }
+    // 解决故障
+    fault.resolve_fault(fault_id).await.expect("故障解决失败");
 
-    let storage = match StorageManager::new(StorageConfig {
-        data_dir: "data".to_string(),
-        max_file_size: 1024 * 1024,  // 1MB
-        max_history_days: 30,
+    // 4. 测试数据存储
+    info!("测试数据存储...");
+    let storage = Arc::new(StorageManager::new(StorageConfig {
+        data_dir: "test_data".to_string(),
+        max_file_size: 1024 * 1024,
+        max_history_days: 7,
         auto_cleanup: true,
-    }) {
-        Ok(sm) => Arc::new(sm),
-        Err(e) => {
-            error!("存储管理器初始化失败: {}", e);
-            return;
-        }
+    }).expect("存储初始化失败"));
+
+    // 存储测试数据
+    let data = SignalData {
+        timestamp: SystemTime::now(),
+        signal_id: 1,
+        phase_states: vec![
+            PhaseStateData {
+                phase_id: 1,
+                state: "Green".to_string(),
+                elapsed_time: 15,
+                remaining_time: 25,
+            },
+            PhaseStateData {
+                phase_id: 2,
+                state: "Red".to_string(),
+                elapsed_time: 40,
+                remaining_time: 0,
+            },
+        ],
+        detector_states: vec![
+            DetectorData {
+                detector_id: 1,
+                occupancy: 0.35,
+                volume: 12,
+                speed: Some(45.5),
+            },
+            DetectorData {
+                detector_id: 2,
+                occupancy: 0.28,
+                volume: 8,
+                speed: Some(38.2),
+            },
+        ],
     };
 
+    storage.store_signal_data(data)
+        .await.expect("数据存储失败");
+
+    // 5. 测试系统监控
+    info!("测试系统监控...");
     let monitor = Arc::new(MonitorManager::new());
+    monitor.update().await.expect("监控更新失败");
 
-    // 启动Web服务器
-    let web_server = WebServer::new(control.clone(), 8080);
-    tokio::spawn(async move {
-        web_server.start().await;
-    });
+    // 等待一段时间观察系统运行状态
+    tokio::time::sleep(Duration::from_secs(5)).await;
 
-    // 主循环
-    let mut interval = interval(Duration::from_millis(100));
-    loop {
-        interval.tick().await;
-
-        // 运行控制周期
-        if let Err(e) = control.run_cycle().await {
-            error!("控制周期执行失败: {}", e);
-            fault.report_fault(
-                fault::types::FaultType::System,
-                fault::types::FaultSeverity::Major,
-                format!("控制周期错误: {}", e),
-            ).await.ok();
-        }
-
-        // 更新系统监控
-        if let Err(e) = monitor.update().await {
-            error!("系统监控更新失败: {}", e);
-        }
-
-        // 存储运行数据
-        if let Err(e) = storage.store_signal_data(control.get_status().await.into()).await {
-            error!("数据存储失败: {}", e);
-        }
-    }
-
-    info!("OpenATC 系统退出");
+    info!("功能测试完成");
 }

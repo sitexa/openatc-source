@@ -1,4 +1,4 @@
-mod error;
+pub(crate) mod error;
 mod types;
 mod filter;
 pub(crate) mod can;

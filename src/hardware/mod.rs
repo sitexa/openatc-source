@@ -1,13 +1,22 @@
 mod error;
-pub mod types;
-mod manager;
-mod monitor;
+mod types;
+mod status;
 mod params;
+mod monitor;
+mod manager;
 mod sync;
 
+#[cfg(test)]
+mod tests;
+
 pub use error::{HardwareError, HardwareResult};
+pub use types::{
+    HardwareConfig,
+    HardwareType,  // Changed from DeviceType
+    HardwareValue, // Changed from ParameterValue
+    HardwareParameter,
+};
+pub use status::{HardwareStatus, HardwareMetrics};
+pub use params::ParameterStore;
+pub use monitor::HardwareMonitor;
 pub use manager::HardwareManager;
-pub use types::*;
-pub use monitor::{DeviceMonitor, DeviceStatus, PerformanceMetrics};
-pub use params::{ParameterStore, ParameterDefinition, ParameterType, ParameterChangeEvent};
-pub use sync::{ParameterSynchronizer, SyncState, ParameterSyncStatus};

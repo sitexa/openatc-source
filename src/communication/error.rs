@@ -20,11 +20,15 @@ pub enum CommError {
     #[error("Configuration error: {0}")]
     ConfigError(String),
 
+    #[error("模拟通信错误: {0}")]
+    SendError(String),
+
     #[error("发送超时")]
     SendTimeout,
 
     #[error("接收超时")]
     ReceiveTimeout,
 }
+
 
 pub type CommResult<T> = Result<T, CommError>;
