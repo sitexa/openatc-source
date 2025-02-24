@@ -1,13 +1,13 @@
 use super::types::*;
 use crate::control::ControlManager;
 use axum::{
-    routing::{get, post},
-    Router, Json,
     extract::State,
+    routing::{get, post}, Json,
+    Router,
 };
 use std::sync::Arc;
 use std::time::SystemTime;
-use tracing::{info, error};
+use tracing::{error, info};
 
 pub struct WebServer {
     control: Arc<ControlManager>,

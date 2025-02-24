@@ -31,7 +31,7 @@ async fn main() {
     let hardware_config = HardwareConfig {
         hardware_id: "TSC001".to_string(),
         hardware_type: HardwareType::Controller,
-        can_interface: "mock0".to_string(),
+        can_interface: "mock0".to_string(), //使用MockCanSocket
         parameters: Default::default(),
     };
 
@@ -61,11 +61,11 @@ async fn main() {
     }
 
     if let Err(e) = control.initialize().await {
-        error!("控制器初始化失败: {}", e);
+        error!("控制器启动失败: {}", e);
         return;
     }
 
-    // 设置初始控制模式
+    // 设置初始控制模式：定周期
     if let Err(e) = control.set_mode(ControlMode::Fixed).await {
         error!("控制模式设置失败: {}", e);
         return;
@@ -75,7 +75,7 @@ async fn main() {
 
     // 主循环
     loop {
-        tokio::select! {
+        tokio::select! { //异步多路复用宏
             // 处理控制循环
             _ = control.run_cycle() => {},
             

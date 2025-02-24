@@ -1,13 +1,13 @@
+use super::mock::MockCanConnection;
+use crate::communication::CanMessage;
+use crate::hardware::types::HardwareValue;
 use crate::hardware::{
-    HardwareManager, HardwareConfig, HardwareResult,
+    HardwareConfig,
     HardwareType,
 };
-use crate::communication::CanMessage;
-use super::mock::MockCanConnection;
+use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use std::collections::HashMap;
-use crate::hardware::types::HardwareValue;
 
 #[tokio::test]
 async fn test_parameter_can_message() {

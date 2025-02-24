@@ -1,9 +1,9 @@
 use super::{error::{FaultError, FaultResult}, types::*};
-use tokio::sync::Mutex;
-use std::sync::Arc;
 use std::collections::HashMap;
+use std::sync::Arc;
 use std::time::SystemTime;
-use tracing::{info, error, warn};
+use tokio::sync::Mutex;
+use tracing::{error, info, warn};
 
 pub struct FaultManager {
     config: Arc<Mutex<FaultConfig>>,
@@ -110,7 +110,7 @@ impl FaultManager {
 
             // 释放锁后再处理需要解决的故障
             drop(active);
-            
+
             for (fault_id, description) in faults_to_resolve {
                 self.resolve_fault(fault_id).await?;
                 info!("故障自动解决: [{}] {}", fault_id, description);

@@ -1,6 +1,6 @@
-use tokio::sync::mpsc;
 use super::types::CanMessage;
 use std::time::Duration;
+use tokio::sync::mpsc;
 
 pub struct MessageBuffer {
     tx: mpsc::Sender<CanMessage>,

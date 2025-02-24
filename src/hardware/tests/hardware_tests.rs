@@ -1,15 +1,12 @@
-use crate::hardware::{
-    HardwareManager,
-    error::HardwareResult,
-    types::{
-        HardwareConfig, HardwareType, HardwareParameter, HardwareValue,
-    },
-    status::HardwareStatus,
-};
 use crate::control::PhaseState;
-use super::mock::MockCanConnection;
-use std::sync::Arc;
-use tokio::sync::Mutex;
+use crate::hardware::{
+    types::{
+        HardwareConfig, HardwareParameter, HardwareType, HardwareValue,
+    }
+    ,
+    HardwareManager
+    ,
+};
 use std::collections::HashMap;
 use std::time::Duration;
 
@@ -45,6 +42,7 @@ async fn test_parameter_management() {
         name: String::from("test_param"),
         value: HardwareValue::Integer(42),
         unit: None,
+        description: None,
     };
     config.parameters.insert(test_param.name.clone(), test_param);
 

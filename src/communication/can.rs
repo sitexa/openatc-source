@@ -1,7 +1,6 @@
-use super::{types::*, filter::MessageFilter, priority::PriorityQueue, buffer::MessageBuffer, CommResult, CommError};
-use tokio::sync::{Mutex, mpsc};
+use super::{buffer::MessageBuffer, filter::MessageFilter, priority::PriorityQueue, types::*, CommError, CommResult};
 use std::sync::Arc;
-use tracing::{info, warn, error};
+use tokio::sync::{mpsc, Mutex};
 
 pub struct CanConnection {
     config: CanConfig,

@@ -1,8 +1,8 @@
-use tokio::time::{interval, Duration};
+use super::error::HardwareResult;
+use super::types::{HardwareMetrics, HardwareStatus};
 use std::sync::Arc;
-use crate::hardware::error::HardwareResult;
-use crate::hardware::status::{HardwareStatus, HardwareMetrics};
-use tracing::{info, error};
+use tokio::time::{interval, Duration};
+use tracing::{error, info};
 
 pub struct HardwareMonitor {
     hardware_id: String,

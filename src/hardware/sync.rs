@@ -1,12 +1,11 @@
-use std::cmp::PartialEq;
 use super::error::HardwareResult;
-use super::types::{HardwareValue, HardwareParameter};
-use super::params::ParameterStore;
+use super::types::{HardwareParameter, HardwareValue, ParameterStore};
+use std::cmp::PartialEq;
 use std::collections::HashMap;
-use std::time::{SystemTime, Duration};
-use tokio::sync::Mutex;
 use std::sync::Arc;
-use tracing::{info, warn, error};
+use std::time::{Duration, SystemTime};
+use tokio::sync::Mutex;
+use tracing::{error, info, warn};
 
 #[derive(Debug, Clone)]
 pub struct HardwareSyncStatus {

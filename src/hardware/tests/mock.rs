@@ -1,13 +1,12 @@
-use crate::hardware::{
-    HardwareConfig, HardwareStatus, HardwareParameter,
-    HardwareMonitor, HardwareManager, HardwareResult,
-};
 use crate::communication::CanMessage;
+use crate::hardware::types::HardwareValue;
+use crate::hardware::{
+    HardwareConfig, HardwareParameter, HardwareResult
+    , HardwareStatus,
+};
+use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use std::collections::HashMap;
-use std::time::{SystemTime, Duration};
-use crate::hardware::types::HardwareValue;
 
 pub struct MockCanConnection {
     pub sent_messages: Arc<Mutex<Vec<CanMessage>>>,
@@ -28,7 +27,7 @@ impl MockCanConnection {
 
 pub struct MockHardwareManager {
     pub config: HardwareConfig,
-    pub status: HardwareStatus,
+    pub types: HardwareStatus,
     pub parameters: HashMap<String, HardwareParameter>,
     pub sent_messages: Arc<Mutex<Vec<CanMessage>>>,
 }
@@ -42,7 +41,7 @@ impl MockHardwareManager {
                 can_interface: "mock_can".to_string(),
                 parameters: HashMap::new(),
             },
-            status: HardwareStatus::new("mock_hardware".to_string()),
+            types: HardwareStatus::new("mock_hardware".to_string()),
             parameters: HashMap::new(),
             sent_messages: Arc::new(Mutex::new(Vec::new())),
         }

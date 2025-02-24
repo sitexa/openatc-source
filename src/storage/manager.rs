@@ -1,13 +1,13 @@
-use super::types::*;
 use super::error::{StorageError, StorageResult};
-use tokio::sync::Mutex;
-use std::sync::Arc;
+use super::types::*;
+use chrono::{DateTime, Local};
 use std::fs::{self, File};
 use std::io::Write;
 use std::path::Path;
+use std::sync::Arc;
 use std::time::SystemTime;
-use chrono::{DateTime, Local};
-use tracing::{info, warn, error};
+use tokio::sync::Mutex;
+use tracing::{error, info, warn};
 
 pub struct StorageManager {
     config: Arc<Mutex<StorageConfig>>,
@@ -33,7 +33,7 @@ impl StorageManager {
 
         let mut current_file = self.current_file.lock().await;
         let mut current_size = self.current_size.lock().await;
-        
+
         // 检查是否需要创建新文件
         if current_file.is_none() || *current_size >= self.config.lock().await.max_file_size {
             self.rotate_file(&mut current_file).await?;
@@ -58,9 +58,9 @@ impl StorageManager {
 
         let file = File::create(path)
             .map_err(|e| StorageError::IoError(e.to_string()))?;
-        
+
         *current_file = Some(file);
-        
+
         // 清理旧文件
         if config.auto_cleanup {
             self.cleanup_old_files().await?;
@@ -72,7 +72,7 @@ impl StorageManager {
     async fn cleanup_old_files(&self) -> StorageResult<()> {
         let config = self.config.lock().await;
         let max_age = chrono::Duration::days(config.max_history_days as i64);
-        
+
         let entries = fs::read_dir(&config.data_dir)
             .map_err(|e| StorageError::IoError(e.to_string()))?;
 

@@ -1,15 +1,15 @@
+use super::monitor::HardwareMonitor;
+use super::types::HardwareParameter;
+use super::types::HardwareStatus;
+use super::types::HardwareValue;
+use super::types::ParameterStore;
 use super::{error::{HardwareError, HardwareResult}, types::HardwareConfig};
-use crate::hardware::params::{HardwareParameter};  // 使用完整路径
 use crate::communication::can::CanConnection;
-use crate::hardware::types::HardwareValue;
-use tokio::sync::Mutex;
-use std::sync::Arc;
-use tracing::{info, error};
 use crate::communication::CanMessage;
 use crate::control::PhaseState;
-use crate::hardware::monitor::HardwareMonitor;
-use crate::hardware::status::HardwareStatus;  // 明确导入 HardwareStatus
-use crate::hardware::params::ParameterStore;
+use std::sync::Arc;
+use tokio::sync::Mutex;
+use tracing::{error, info};
 pub struct HardwareManager {
     pub(crate) config: Arc<Mutex<HardwareConfig>>,
     pub(crate) can_connection: Arc<Mutex<CanConnection>>,
@@ -174,15 +174,15 @@ impl HardwareManager {
 
     pub async fn shutdown(&self) -> HardwareResult<()> {
         info!("正在关闭硬件管理器...");
-        
+
         // 保存参数状态
         let params = self.params.lock().await;
         params.save_to_file("params.json")?;
-        
+
         // 更新状态
         let mut status = self.status.lock().await;
         status.online = false;
-        
+
         info!("硬件管理器已关闭");
         Ok(())
     }

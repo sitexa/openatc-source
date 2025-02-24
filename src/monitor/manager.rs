@@ -1,10 +1,10 @@
-use super::types::*;
 use super::error::{MonitorError, MonitorResult};
-use tokio::sync::Mutex;
+use super::types::*;
 use std::sync::Arc;
-use std::time::{SystemTime, Duration};
-use sysinfo::{System, SystemExt, ProcessExt, CpuExt};
-use tracing::{info, warn, error};
+use std::time::{Duration, SystemTime};
+use sysinfo::{CpuExt, ProcessExt, System, SystemExt};
+use tokio::sync::Mutex;
+use tracing::{error, info, warn};
 
 pub struct MonitorManager {
     system: Arc<Mutex<System>>,

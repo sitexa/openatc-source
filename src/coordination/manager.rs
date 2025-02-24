@@ -1,10 +1,10 @@
-use super::types::*;
 use super::algorithm::GreenWaveCalculator;
+use super::types::*;
 use crate::control::ControlManager;
-use tokio::sync::Mutex;
-use std::sync::Arc;
 use std::collections::HashMap;
-use tracing::{info, warn, error};
+use std::sync::Arc;
+use tokio::sync::Mutex;
+use tracing::{error, info, warn};
 
 pub struct CoordinationManager {
     intersections: Arc<Mutex<HashMap<u32, IntersectionInfo>>>,
