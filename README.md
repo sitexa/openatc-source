@@ -140,3 +140,13 @@
 3. 增加高级控制策略
 4. 添加数据分析功能
 5. 完善系统配置管理
+
+# 第1次测试main.rs -- 2025-2-24 - tag20250224
+
+```
+2025-02-24T02:48:08.754386Z  INFO traeatc: 正在启动信号控制系统...
+2025-02-24T02:48:08.899417Z  INFO traeatc::hardware::monitor: 硬件监控已启动: TSC001
+2025-02-24T02:48:08.899443Z  INFO traeatc::hardware::monitor: 性能指标收集已启动: TSC001
+2025-02-24T02:48:08.899516Z  INFO traeatc::control::manager: 初始化交通控制管理器
+2025-02-24T02:48:08.899554Z  INFO traeatc::control::manager: 控制模式切换为: AllRed
+```

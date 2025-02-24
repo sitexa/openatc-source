@@ -131,6 +131,13 @@ pub struct VehicleDetection {
     pub length: Option<f32>,
 }
 
+#[derive(Debug, Clone)]
+pub struct ControlConfig {
+    pub intersection_id: String,
+    pub control_mode: ControlMode,
+    pub cycle_length: u32,
+}
+
 impl From<ControllerState> for SignalData {
     fn from(state: ControllerState) -> Self {
         SignalData {

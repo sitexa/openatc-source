@@ -171,4 +171,19 @@ impl HardwareManager {
             rtr: false,
         })
     }
+
+    pub async fn shutdown(&self) -> HardwareResult<()> {
+        info!("正在关闭硬件管理器...");
+        
+        // 保存参数状态
+        let params = self.params.lock().await;
+        params.save_to_file("params.json")?;
+        
+        // 更新状态
+        let mut status = self.status.lock().await;
+        status.online = false;
+        
+        info!("硬件管理器已关闭");
+        Ok(())
+    }
 }

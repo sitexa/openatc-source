@@ -86,4 +86,37 @@ impl FaultManager {
         info!("故障历史记录已清除");
         Ok(())
     }
+
+    pub async fn monitor_faults(&self) -> FaultResult<()> {
+        let config = self.config.lock().await;
+        let active = self.active_faults.lock().await;
+
+        // 检查自动解决超时
+        if let Some(timeout) = config.auto_resolve_timeout {
+            let faults_to_resolve: Vec<(u32, String)> = active.iter()
+                .filter(|(_, fault)| !fault.resolved)
+                .filter_map(|(id, fault)| {
+                    if let Ok(elapsed) = fault.timestamp.elapsed() {
+                        if elapsed >= timeout {
+                            Some((*id, fault.description.clone()))
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+
+            // 释放锁后再处理需要解决的故障
+            drop(active);
+            
+            for (fault_id, description) in faults_to_resolve {
+                self.resolve_fault(fault_id).await?;
+                info!("故障自动解决: [{}] {}", fault_id, description);
+            }
+        }
+
+        Ok(())
+    }
 }
