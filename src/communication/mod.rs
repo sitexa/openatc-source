@@ -1,5 +1,5 @@
 pub(crate) mod error;
-mod types;
+pub mod types;
 mod filter;
 pub(crate) mod can;
 mod priority;

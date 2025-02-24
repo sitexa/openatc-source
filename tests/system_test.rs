@@ -1,3 +1,9 @@
+use std::sync::Arc;
+use traeatc::control::{ControlManager, types::ControlMode};
+mod common;
+use common::setup::{setup_mock_hardware, collect_mock_messages};
+
+
 #[tokio::test]
 async fn test_signal_control() {
     // 初始化系统组件

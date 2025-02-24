@@ -1,5 +1,3 @@
-根据代码分析，这是一个名为"trae-atc"的AI交通控制系统项目。让我为您详细分析：
-
 ### 1. 项目概述
 这是一个使用 Rust 语言开发的智能交通控制系统，项目名称 "trae-atc" (AI Traffic Control System)。
 
@@ -150,3 +148,48 @@
 2025-02-24T02:48:08.899516Z  INFO traeatc::control::manager: 初始化交通控制管理器
 2025-02-24T02:48:08.899554Z  INFO traeatc::control::manager: 控制模式切换为: AllRed
 ```
+
+## MockCanSocket
+
+在communication模块中编写MockCanSocket模拟CAN接口，以便于在没有硬件连接的情况下测试系统功能；
+在硬件配置代码里指明CAN接口为"mock*"，以后在建立CanConnection时，发现can_interface为"mock*"时，
+就使用MockCanSocket模拟通信功能。
+
+``` 
+// 初始化硬件管理器
+    let hardware_config = HardwareConfig {
+        hardware_id: "TSC001".to_string(),
+        hardware_type: HardwareType::Controller,
+        can_interface: "mock0".to_string(),
+        parameters: Default::default(),
+    };
+```
+
+``` 
+//模拟CAN接口
+let socket: Box<dyn CanSocket + Send> = if interface.starts_with("mock") 
+```
+
+### system_test
+
+```cargo test  -- --nocapture```
+
+``` 
+test hardware::tests::mock::tests::test_mock_can_connection ... ok
+test hardware::tests::mock::tests::test_mock_hardware_manager ... ok
+test hardware::tests::hardware_tests::test_error_handling ... FAILED
+test hardware::tests::hardware_tests::test_hardware_initialization ... FAILED
+test hardware::tests::hardware_tests::test_phase_management ... FAILED
+test hardware::tests::hardware_tests::test_parameter_management ... FAILED
+test hardware::tests::hardware_tests::test_monitor_functionality ... FAILED
+
+failures:
+    hardware::tests::hardware_tests::test_error_handling
+    hardware::tests::hardware_tests::test_hardware_initialization
+    hardware::tests::hardware_tests::test_monitor_functionality
+    hardware::tests::hardware_tests::test_parameter_management
+    hardware::tests::hardware_tests::test_phase_management
+
+test result: FAILED. 5 passed; 5 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+

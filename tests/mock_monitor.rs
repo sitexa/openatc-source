@@ -1,15 +1,21 @@
-use tokio::sync::mpsc;
+use std::sync::{Arc};
+use tokio::sync::{mpsc, Mutex};
 use tracing::info;
-use crate::common::setup::MockMessage;
+use traeatc::communication::types::CanMessage;
 
-pub async fn monitor_mock_messages() -> mpsc::Receiver<MockMessage> {
-    let (tx, rx) = mpsc::channel(100);
-    
+pub fn create_mock_monitor() -> (mpsc::Sender<CanMessage>, Arc<Mutex<mpsc::Receiver<CanMessage>>>) {
+    let (tx, rx) = mpsc::channel::<CanMessage>(100);
+    let rx = Arc::new(Mutex::new(rx));
+    let rx_clone = Arc::clone(&rx);
+
     tokio::spawn(async move {
-        while let Some(msg) = rx.recv().await {
-            info!("Mock CAN消息: ID={:03X}, Data={:?}", msg.id, msg.data);
+        loop {
+            let mut guard = rx_clone.lock().await;
+            if let Some(msg) = guard.recv().await {
+                info!("Mock CAN消息: ID={:03X}, Data={:?}", msg.id, msg.data);
+            }
         }
     });
 
-    rx
+    (tx, rx)
 }
