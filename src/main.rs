@@ -1,12 +1,15 @@
+use std::io;
+use std::io::Write;
 use std::sync::Arc;
+use std::time::Instant;
 use tokio::time::Duration;
-use tracing::{info, error, Level};
+use tracing::{error, info, Level};
 use tracing_subscriber::FmtSubscriber;
 
-use control::{ControlManager, types::ControlMode};
-use fault::{FaultManager, types::FaultConfig};
+use control::{types::ControlMode, ControlManager};
+use fault::{types::FaultConfig, FaultManager};
+use hardware::{HardwareConfig, HardwareManager, HardwareType};
 use monitor::MonitorManager;
-use hardware::{HardwareManager, HardwareConfig, HardwareType};
 
 pub mod hardware;
 pub mod control;
@@ -48,6 +51,8 @@ async fn main() {
 
     // 初始化监控和故障管理
     let monitor = Arc::new(MonitorManager::new());
+
+    // 初始化故障管理器
     let fault = Arc::new(FaultManager::new(FaultConfig {
         max_events: 1000,
         auto_resolve_timeout: Some(Duration::from_secs(3600)),
@@ -73,21 +78,47 @@ async fn main() {
 
     info!("信号控制系统已启动");
 
+    let start_time = Instant::now(); // 记录程序开始时间
+    let mut interval = tokio::time::interval(Duration::from_millis(100)); // 设置100ms的执行周期
+
     // 主循环
     loop {
-        tokio::select! { //异步多路复用宏
-            // 处理控制循环
-            _ = control.run_cycle() => {},
-            
-            // 处理监控更新
-            _ = monitor.update() => {},
-            
-            // 处理故障检测
-            _ = fault.monitor_faults() => {},
+        tokio::select! {
+            // 等待定时器触发
+            _ = interval.tick() => {
+                // Clone Arc references for each task
+                let control = control.clone();
+                let monitor = monitor.clone();
+                let fault = fault.clone();
+
+                // 异步启动所有任务
+                tokio::spawn(async move{
+                    if let Err(e) = control.run_cycle().await {
+                        error!("控制循环执行失败: {:?}", e);
+                    }
+                });
+                
+                tokio::spawn(async move{
+                    if let Err(e) = monitor.update().await {
+                        error!("监控更新失败: {:?}", e);
+                    }
+                });
+                
+                tokio::spawn(async move{
+                    if let Err(e) = fault.monitor_faults().await {
+                        error!("故障检测失败: {:?}", e);
+                    }
+                });
+
+                // 计算并显示运行时间
+                let elapsed = start_time.elapsed();
+                print!("\r运行时间: {}秒 {}纳秒", elapsed.as_secs(), elapsed.subsec_nanos());
+                io::stdout().flush().unwrap();
+            }
             
             // 系统退出处理
             _ = tokio::signal::ctrl_c() => {
-                info!("接收到退出信号，正在关闭系统...");
+                info!("\r接收到退出信号，正在关闭系统...");
                 break;
             }
         }
@@ -97,6 +128,6 @@ async fn main() {
     if let Err(e) = control.set_mode(ControlMode::AllRed).await {
         error!("关闭时设置全红失败: {}", e);
     }
-    hardware.shutdown().await;
+    hardware.shutdown().await.expect("系统关闭失败");
     info!("系统已安全关闭");
 }

@@ -1,6 +1,7 @@
 use super::{buffer::MessageBuffer, filter::MessageFilter, priority::PriorityQueue, types::*, CommError, CommResult};
-use std::sync::Arc;
-use tokio::sync::{mpsc, Mutex};
+use std::sync::{Arc};
+use tokio::sync::{mpsc, Mutex, MutexGuard};
+use tracing::info;
 
 pub struct CanConnection {
     config: CanConfig,
@@ -29,9 +30,9 @@ impl CanSocket for RealCanSocket {
             frame.id,
             &frame.data,
             frame.rtr,
-            frame.extended
+            frame.extended,
         ).map_err(|e| CommError::SocketError(e.to_string()))?;
-        
+
         self.socket.write_frame(&can_frame)
             .map_err(|e| CommError::SocketError(e.to_string()))
     }
@@ -39,7 +40,7 @@ impl CanSocket for RealCanSocket {
     async fn read_frame(&self) -> CommResult<CanMessage> {
         let frame = self.socket.read_frame()
             .map_err(|e| CommError::SocketError(e.to_string()))?;
-        
+
         Ok(CanMessage {
             id: frame.id(),
             data: frame.data().to_vec(),
@@ -58,26 +59,48 @@ struct MockCanSocket {
 #[async_trait::async_trait]
 impl CanSocket for MockCanSocket {
     async fn write_frame(&self, frame: &CanMessage) -> CommResult<()> {
-        self.tx.send(frame.clone()).await
-            .map_err(|e| CommError::SocketError(e.to_string()))
+        // 模拟写入延迟
+        tokio::time::sleep(tokio::time::Duration::from_millis(10)).await;
+
+        // 模拟写入成功率 95%
+        if rand::random::<f32>() < 0.95 {
+            match self.tx.send(frame.clone()).await {
+                Ok(_) => {
+                    Ok(())
+                }
+                Err(e) => {
+                    Err(CommError::SocketError(format!("发送失败: {}", e)))
+                }
+            }
+        } else {
+            Err(CommError::SocketError("模拟写入失败".to_string()))
+        }
     }
 
     async fn read_frame(&self) -> CommResult<CanMessage> {
+        // 模拟读取延迟
+        tokio::time::sleep(tokio::time::Duration::from_millis(5)).await;
+
         let mut rx = self.rx.lock().await;
-        rx.recv().await
-            .ok_or_else(|| CommError::SocketError("No data available".to_string()))
+        match rx.recv().await {
+            Some(msg) => {
+                Ok(msg)
+            }
+            None => {
+                Err(CommError::SocketError("无数据可读".to_string()))
+            }
+        }
     }
 }
 
 impl CanConnection {
     pub async fn new(interface: &str) -> CommResult<Self> {
         let socket: Box<dyn CanSocket + Send> = if interface.starts_with("mock") {
-            // 创建 Mock Socket
-            let (tx1, rx1) = mpsc::channel(100);
-            let (tx2, rx2) = mpsc::channel(100);
-            Box::new(MockCanSocket { 
-                tx: tx1, 
-                rx: Arc::new(Mutex::new(rx2))  // 包装 receiver
+            // 创建 Mock Socket，只使用一对通道
+            let (tx, rx) = mpsc::channel(100);
+            Box::new(MockCanSocket {
+                tx: tx.clone(),  // 克隆发送端
+                rx: Arc::new(Mutex::new(rx)),  // 接收端
             })
         } else {
             // 创建真实 Socket
@@ -102,10 +125,13 @@ impl CanConnection {
     }
 
     pub async fn send_message(&self, message: CanMessage) -> CommResult<()> {
-        let mut queue = self.priority_queue.lock().await;
-        let priority = self.get_message_priority(&message);
-        queue.push(message, priority);
-        self.process_queue().await
+        {
+            let mut queue = self.priority_queue.lock().await;
+            let priority = self.get_message_priority(&message);
+            queue.push(message, priority);
+        }
+        let result = self.process_queue().await;
+        result
     }
 
     async fn process_queue(&self) -> CommResult<()> {

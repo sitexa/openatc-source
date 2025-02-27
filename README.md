@@ -192,3 +192,19 @@ failures:
 test result: FAILED. 5 passed; 5 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 ```
 
+### 修改主程序循环
+
+``` 
+2025-02-27T01:10:45.083433Z  INFO traeatc: 正在启动信号控制系统...
+2025-02-27T01:10:45.222963Z  INFO traeatc::hardware::monitor: 硬件监控已启动: TSC001
+2025-02-27T01:10:45.222989Z  INFO traeatc::hardware::monitor: 性能指标收集已启动: TSC001
+2025-02-27T01:10:45.223133Z  INFO traeatc::control::manager: 从配置文件加载相位和配时方案
+2025-02-27T01:10:45.246629Z  INFO traeatc: 信号控制系统已启动
+运行时间: 8秒 601963166纳秒2025-02-27T01:10:53.911018Z  WARN traeatc::monitor::manager: 系统资源使用率过高
+运行时间: 9秒 401788875纳秒2025-02-27T01:10:54.706158Z  WARN traeatc::monitor::manager: 系统资源使用率过高
+运行时间: 9秒 501422750纳秒2025-02-27T01:10:54.808836Z  WARN traeatc::monitor::manager: 系统资源使用率过高
+运行时间: 9秒 601785791纳秒2025-02-27T01:10:54.911408Z  WARN traeatc::monitor::manager: 系统资源使用率过高
+运行时间: 58秒 2076000纳秒2025-02-27T01:11:43.302578Z  WARN traeatc::monitor::manager: 系统资源使用率过高
+运行时间: 165秒 902762666纳秒
+
+```

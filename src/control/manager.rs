@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::ops::Deref;
 use super::{error::{ControlError, ControlResult}, types::*};
 use crate::hardware::HardwareManager;
 use tokio::sync::Mutex;
@@ -32,16 +33,16 @@ impl ControlManager {
     }
 
     pub async fn initialize(&self) -> ControlResult<()> {
-        info!("初始化交通控制管理器");
         self.load_configuration().await?;
         self.set_mode(ControlMode::AllRed).await?;
         Ok(())
     }
 
     pub async fn set_mode(&self, mode: ControlMode) -> ControlResult<()> {
-        let mut state = self.state.lock().await;
-        state.mode = mode;
-        info!("控制模式切换为: {:?}", mode);
+        {
+            let mut state = self.state.lock().await;
+            state.mode = mode;
+        }
         self.update_outputs().await?;
         Ok(())
     }
@@ -56,6 +57,7 @@ impl ControlManager {
 
     pub async fn run_cycle(&self) -> ControlResult<()> {
         let state = self.state.lock().await;
+        print!("\r run_cycle ...");
         match state.mode {
             ControlMode::Fixed => self.run_fixed_time_cycle().await,
             ControlMode::Vehicle => self.run_vehicle_responsive_cycle().await,
@@ -70,6 +72,8 @@ impl ControlManager {
         // 从配置文件加载相位和配时方案
         let mut phases = self.phases.lock().await;
         let mut plans = self.timing_plans.lock().await;
+
+        info!("从配置文件加载相位和配时方案");
 
         // TODO: 从配置文件加载
         // 临时添加测试数据
@@ -99,26 +103,39 @@ impl ControlManager {
         };
         plans.insert(1, plan);
 
+        // 设置当前配时方案
+        {
+            let mut state = self.state.lock().await;
+            state.current_plan = 1;  // 设置为已加载的配时方案ID
+        }
+
         Ok(())
     }
 
     async fn update_outputs(&self) -> ControlResult<()> {
         let state = self.state.lock().await;
         let phases = self.phases.lock().await;
-        
+
         for (phase_id, phase) in phases.iter() {
-            let status = self.get_phase_status(*phase_id, &state).await?;
-            self.hardware.update_phase_output(*phase_id, status).await
-                .map_err(|e| ControlError::HardwareError(e.to_string()))?;
+            match self.get_phase_status(*phase_id, &state, phases.deref()).await {
+                Ok(status) => {
+                    if let Err(e) = self.hardware.update_phase_output(*phase_id, status).await {
+                        return Err(ControlError::HardwareError(e.to_string()));  // 返回错误而不是继续
+                    }
+                }
+                Err(e) => {
+                    return Err(e);  // 返回错误而不是继续
+                }
+            }
         }
-        
+
         Ok(())
     }
 
     async fn run_fixed_time_cycle(&self) -> ControlResult<()> {
         let mut state = self.state.lock().await;
         let plans = self.timing_plans.lock().await;
-        
+
         if let Some(plan) = plans.get(&state.current_plan) {
             state.cycle_elapsed_time += 1;
             state.phase_elapsed_time += 1;
@@ -146,7 +163,7 @@ impl ControlManager {
         let current_idx = plan.phases.iter()
             .position(|p| p.phase_id == state.current_phase)
             .unwrap_or(0);
-        
+
         let next_idx = (current_idx + 1) % plan.phases.len();
         state.current_phase = plan.phases[next_idx].phase_id;
         state.phase_elapsed_time = 0;
@@ -155,14 +172,13 @@ impl ControlManager {
         Ok(())
     }
 
-    async fn get_phase_status(&self, phase_id: u32, state: &ControllerState) -> ControlResult<PhaseState> {
-        let phases = self.phases.lock().await;
+    async fn get_phase_status(&self, phase_id: u32, state: &ControllerState, phases: &HashMap<u32, Phase>) -> ControlResult<PhaseState> {
         let plans = self.timing_plans.lock().await;
 
         if let (Some(phase), Some(plan)) = (phases.get(&phase_id), plans.get(&state.current_plan)) {
             if let Some(phase_config) = plan.phases.iter().find(|p| p.phase_id == phase_id) {
                 let elapsed = state.phase_elapsed_time as u64;
-                
+
                 if elapsed < phase_config.split.as_secs() {
                     Ok(PhaseState::Green)
                 } else if elapsed < phase_config.split.as_secs() + phase.yellow_time.as_secs() {
@@ -202,7 +218,7 @@ impl ControlManager {
     async fn run_vehicle_responsive_cycle(&self) -> ControlResult<()> {
         let mut state = self.state.lock().await;
         let plans = self.timing_plans.lock().await;
-        
+
         if let Some(plan) = plans.get(&state.current_plan) {
             state.cycle_elapsed_time += 1;
             state.phase_elapsed_time += 1;
@@ -210,7 +226,7 @@ impl ControlManager {
             // 获取当前相位配置
             if let Some(current_phase) = plan.phases.iter()
                 .find(|p| p.phase_id == state.current_phase) {
-                
+
                 // 检查是否需要切换相位
                 let should_switch = if let Some(detection) = self.check_vehicle_presence(current_phase.phase_id).await? {
                     // 有车辆时延长绿灯，但不超过最大绿灯时间
@@ -243,26 +259,26 @@ impl ControlManager {
     async fn run_flash_mode(&self) -> ControlResult<()> {
         let state = self.state.lock().await;
         let phases = self.phases.lock().await;
-        
+
         for (phase_id, _) in phases.iter() {
             // 在闪光模式下，所有相位都闪烁
             self.hardware.update_phase_output(*phase_id, PhaseState::Flash).await
                 .map_err(|e| ControlError::HardwareError(e.to_string()))?;
         }
-        
+
         Ok(())
     }
 
     async fn run_all_red_mode(&self) -> ControlResult<()> {
         let state = self.state.lock().await;
         let phases = self.phases.lock().await;
-        
+
         for (phase_id, _) in phases.iter() {
             // 在全红模式下，所有相位都为红灯
             self.hardware.update_phase_output(*phase_id, PhaseState::Red).await
                 .map_err(|e| ControlError::HardwareError(e.to_string()))?;
         }
-        
+
         Ok(())
     }
 
@@ -274,7 +290,7 @@ impl ControlManager {
     pub async fn update_coordination_offset(&self, offset: Duration) -> ControlResult<()> {
         let mut state = self.state.lock().await;
         let mut plans = self.timing_plans.lock().await;
-        
+
         if let Some(plan) = plans.get_mut(&state.current_plan) {
             plan.offset = offset;
             info!("更新协调偏移量: {:?}", offset);
@@ -282,27 +298,27 @@ impl ControlManager {
         } else {
             return Err(ControlError::StateError("当前无活动配时方案".to_string()));
         }
-        
+
         Ok(())
     }
 
     pub async fn disable_coordination(&self) -> ControlResult<()> {
         let mut state = self.state.lock().await;
         let mut plans = self.timing_plans.lock().await;
-        
+
         if let Some(plan) = plans.get_mut(&state.current_plan) {
             plan.offset = Duration::from_secs(0);
             info!("已禁用协调控制");
             self.update_outputs().await?;
         }
-        
+
         Ok(())
     }
 
     pub async fn is_coordinated(&self) -> bool {
         let state = self.state.lock().await;
         let plans = self.timing_plans.lock().await;
-        
+
         if let Some(plan) = plans.get(&state.current_plan) {
             plan.offset.as_secs() > 0
         } else {

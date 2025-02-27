@@ -42,9 +42,6 @@ impl MonitorManager {
             network_status: self.network_stats.lock().await.clone(),
         };
 
-        info!("系统状态更新: CPU使用率 {:.1}%, 内存使用率 {:.1}%", 
-            status.cpu_usage, status.memory_usage * 100.0);
-
         if status.cpu_usage > 80.0 || status.memory_usage > 0.8 {
             warn!("系统资源使用率过高");
         }

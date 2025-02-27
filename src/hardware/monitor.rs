@@ -1,12 +1,14 @@
 use super::error::HardwareResult;
 use super::types::{HardwareMetrics, HardwareStatus};
 use std::sync::Arc;
+use std::time::SystemTime;
+use tokio::sync::Mutex;
 use tokio::time::{interval, Duration};
 use tracing::{error, info};
 
 pub struct HardwareMonitor {
     hardware_id: String,
-    status: Arc<tokio::sync::Mutex<HardwareStatus>>,
+    status: Arc<Mutex<HardwareStatus>>,
     heartbeat_interval: Duration,
     metrics_interval: Duration,
 }
@@ -15,7 +17,7 @@ impl HardwareMonitor {
     pub fn new(hardware_id: String) -> Self {
         Self {
             hardware_id: hardware_id.clone(),
-            status: Arc::new(tokio::sync::Mutex::new(HardwareStatus::new(hardware_id))),
+            status: Arc::new(Mutex::new(HardwareStatus::new(hardware_id))),
             heartbeat_interval: Duration::from_secs(1),
             metrics_interval: Duration::from_secs(5),
         }
@@ -23,10 +25,10 @@ impl HardwareMonitor {
 
     pub async fn start_monitoring(&self) -> HardwareResult<()> {
         let status = self.status.clone();
-        let interval_duration = self.heartbeat_interval;  // 重命名变量
+        let interval_duration = self.heartbeat_interval;
 
         tokio::spawn(async move {
-            let mut timer = interval(interval_duration);  // 使用新的变量名
+            let mut timer = interval(interval_duration);
             loop {
                 timer.tick().await;
                 let mut status = status.lock().await;
@@ -57,13 +59,14 @@ impl HardwareMonitor {
         Ok(())
     }
 
-    async fn collect_metrics(status: &Arc<tokio::sync::Mutex<HardwareStatus>>, hardware_id: &str) -> HardwareResult<()> {
+    async fn collect_metrics(status: &Arc<Mutex<HardwareStatus>>, hardware_id: &str) -> HardwareResult<()> {
         let metrics = HardwareMetrics {
+            hardware_id: hardware_id.parse().unwrap(),
             cpu_usage: Self::get_cpu_usage().await?,
             memory_usage: Self::get_memory_usage().await?,
             temperature: Self::get_temperature().await?,
             uptime: Self::get_uptime().await?,
-            last_update: std::time::SystemTime::now(),
+            last_update: SystemTime::now(),
         };
 
         let mut status = status.lock().await;

@@ -33,6 +33,7 @@ pub struct HardwareStatus {
 
 #[derive(Debug, Clone)]
 pub struct HardwareMetrics {
+    pub hardware_id: String,
     pub cpu_usage: f32,
     pub memory_usage: f32,
     pub temperature: f32,
@@ -79,6 +80,7 @@ impl HardwareStatus {
 impl Default for HardwareMetrics {
     fn default() -> Self {
         Self {
+            hardware_id: "".to_string(),
             cpu_usage: 0.0,
             memory_usage: 0.0,
             temperature: 0.0,

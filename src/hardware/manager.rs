@@ -142,14 +142,19 @@ impl HardwareManager {
         // 将相位状态转换为CAN消息
         let message = self.create_phase_output_message(phase_id, state)?;
 
-        // 通过CAN总线发送消息
-        self.can_connection.lock().await
-            .send_message(message)
-            .await
-            .map_err(|e| HardwareError::CommunicationError(e.to_string()))?;
+        // 获取CAN连接锁
+        let can = self.can_connection.lock().await;
 
-        info!("相位输出更新: 相位 {} -> {:?}", phase_id, state);
-        Ok(())
+        // 通过CAN总线发送消息
+        let result = can.send_message(message).await;
+        match result {
+            Ok(_) => {
+                Ok(())
+            }
+            Err(e) => {
+                Err(HardwareError::CommunicationError(format!("CAN发送失败: {:?}", e)))
+            }
+        }
     }
 
     fn create_phase_output_message(&self, phase_id: u32, state: PhaseState) -> HardwareResult<CanMessage> {
