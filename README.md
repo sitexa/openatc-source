@@ -195,16 +195,106 @@ test result: FAILED. 5 passed; 5 failed; 0 ignored; 0 measured; 0 filtered out; 
 ### 修改主程序循环
 
 ``` 
-2025-02-27T01:10:45.083433Z  INFO traeatc: 正在启动信号控制系统...
-2025-02-27T01:10:45.222963Z  INFO traeatc::hardware::monitor: 硬件监控已启动: TSC001
-2025-02-27T01:10:45.222989Z  INFO traeatc::hardware::monitor: 性能指标收集已启动: TSC001
-2025-02-27T01:10:45.223133Z  INFO traeatc::control::manager: 从配置文件加载相位和配时方案
-2025-02-27T01:10:45.246629Z  INFO traeatc: 信号控制系统已启动
-运行时间: 8秒 601963166纳秒2025-02-27T01:10:53.911018Z  WARN traeatc::monitor::manager: 系统资源使用率过高
-运行时间: 9秒 401788875纳秒2025-02-27T01:10:54.706158Z  WARN traeatc::monitor::manager: 系统资源使用率过高
-运行时间: 9秒 501422750纳秒2025-02-27T01:10:54.808836Z  WARN traeatc::monitor::manager: 系统资源使用率过高
-运行时间: 9秒 601785791纳秒2025-02-27T01:10:54.911408Z  WARN traeatc::monitor::manager: 系统资源使用率过高
-运行时间: 58秒 2076000纳秒2025-02-27T01:11:43.302578Z  WARN traeatc::monitor::manager: 系统资源使用率过高
-运行时间: 165秒 902762666纳秒
+     Running `target/debug/traeatc`
+2025-02-27T03:22:05.943369Z  INFO traeatc: 正在启动信号控制系统...
+2025-02-27T03:22:06.087643Z  INFO traeatc::hardware::monitor: 硬件监控已启动: TSC001
+2025-02-27T03:22:06.087695Z  INFO traeatc::hardware::monitor: 性能指标收集已启动: TSC001
+2025-02-27T03:22:06.087797Z  INFO traeatc::control::manager: 从配置文件加载相位和配时方案
+2025-02-27T03:22:06.087815Z  INFO traeatc::control::manager: 输出到硬件
+2025-02-27T03:22:06.087822Z  INFO traeatc::control::manager: 输出到硬件1
+2025-02-27T03:22:06.087844Z  INFO traeatc::control::manager: 输出到硬件2
+2025-02-27T03:22:06.087852Z  INFO traeatc::control::manager: 输出到硬件3
+2025-02-27T03:22:06.087858Z  INFO traeatc::control::manager: 输出到硬件4
+2025-02-27T03:22:06.100163Z  INFO traeatc::control::manager: 输出到硬件5
+2025-02-27T03:22:06.100178Z  INFO traeatc::control::manager: 输出到硬件
+2025-02-27T03:22:06.100185Z  INFO traeatc::control::manager: 输出到硬件1
+2025-02-27T03:22:06.100192Z  INFO traeatc::control::manager: 输出到硬件2
+2025-02-27T03:22:06.100199Z  INFO traeatc::control::manager: 输出到硬件3
+2025-02-27T03:22:06.100204Z  INFO traeatc::control::manager: 输出到硬件4
+2025-02-27T03:22:06.112336Z  INFO traeatc::control::manager: 输出到硬件5
+2025-02-27T03:22:06.112350Z  INFO traeatc: 信号控制系统已启动
+2025-02-27T03:22:06.112373Z  INFO traeatc: 开始创建定时器...
+2025-02-27T03:22:06.112381Z  INFO traeatc: 定时器创建完成
+2025-02-27T03:22:06.112388Z  INFO traeatc: 等待任务触发...
+2025-02-27T03:22:06.113593Z  INFO traeatc: 定时器触发，准备执行任务
+2025-02-27T03:22:06.113606Z  INFO traeatc: 开始执行控制任务
+ run_cycle ...2025-02-27T03:22:06.113644Z  INFO traeatc: 开始执行监控任务
+2025-02-27T03:22:06.113658Z  INFO traeatc::control::manager: 循环：Fixed
+2025-02-27T03:22:06.113668Z  INFO traeatc: 开始执行故障检测任务
+2025-02-27T03:22:06.113672Z  INFO traeatc::control::manager: 定周期控制...
+2025-02-27T03:22:06.113678Z  INFO traeatc: 等待所有任务完成
+2025-02-27T03:22:06.113681Z  INFO traeatc::control::manager: 定周期控制1...
+2025-02-27T03:22:06.113733Z  INFO traeatc::control::manager: 定周期控制2...
+2025-02-27T03:22:06.113744Z  INFO traeatc::control::manager: 定周期控制3...
+2025-02-27T03:22:06.113751Z  INFO traeatc::control::manager: 定周期控制6...
+2025-02-27T03:22:06.113757Z  INFO traeatc::control::manager: 输出到硬件
+2025-02-27T03:22:06.113764Z  INFO traeatc::control::manager: 输出到硬件1
+2025-02-27T03:22:06.113771Z  INFO traeatc::control::manager: 输出到硬件2
+2025-02-27T03:22:06.113779Z  INFO traeatc::control::manager: 输出到硬件3
+2025-02-27T03:22:06.113784Z  INFO traeatc::control::manager: 输出到硬件4
+2025-02-27T03:22:06.125928Z  INFO traeatc::control::manager: 输出到硬件5
+2025-02-27T03:22:06.125946Z  INFO traeatc::control::manager: 定周期控制7...
+2025-02-27T03:22:06.164719Z  INFO traeatc: 所有任务执行完成
+运行时间: 0秒 52383000纳秒2025-02-27T03:22:06.164741Z  INFO traeatc: 等待任务触发...
+2025-02-27T03:22:06.213919Z  INFO traeatc: 定时器触发，准备执行任务
+2025-02-27T03:22:06.213938Z  INFO traeatc: 开始执行控制任务
+ run_cycle ...2025-02-27T03:22:06.213968Z  INFO traeatc: 开始执行监控任务
+2025-02-27T03:22:06.214024Z  INFO traeatc::control::manager: 循环：Fixed
+2025-02-27T03:22:06.214043Z  INFO traeatc: 开始执行故障检测任务
+2025-02-27T03:22:06.214046Z  INFO traeatc::control::manager: 定周期控制...
+2025-02-27T03:22:06.214062Z  INFO traeatc::control::manager: 定周期控制1...
+2025-02-27T03:22:06.214068Z  INFO traeatc: 等待所有任务完成
+2025-02-27T03:22:06.214074Z  INFO traeatc::control::manager: 定周期控制2...
+2025-02-27T03:22:06.214089Z  INFO traeatc::control::manager: 定周期控制3...
+2025-02-27T03:22:06.214102Z  INFO traeatc::control::manager: 定周期控制6...
+2025-02-27T03:22:06.214111Z  INFO traeatc::control::manager: 输出到硬件
+2025-02-27T03:22:06.214122Z  INFO traeatc::control::manager: 输出到硬件1
+2025-02-27T03:22:06.214179Z  INFO traeatc::control::manager: 输出到硬件2
+2025-02-27T03:22:06.214196Z  INFO traeatc::control::manager: 输出到硬件3
+2025-02-27T03:22:06.214206Z  INFO traeatc::control::manager: 输出到硬件4
+2025-02-27T03:22:06.226484Z ERROR traeatc: 控制循环执行失败: HardwareError("通信错误: CAN发送失败: SocketError(\"模拟写入失败\")")
+2025-02-27T03:22:06.267761Z  INFO traeatc: 所有任务执行完成
+运行时间: 0秒 155433458纳秒2025-02-27T03:22:06.267789Z  INFO traeatc: 等待任务触发...
+2025-02-27T03:22:06.314124Z  INFO traeatc: 定时器触发，准备执行任务
+2025-02-27T03:22:06.314417Z  INFO traeatc: 开始执行控制任务
+2025-02-27T03:22:06.314521Z  INFO traeatc: 开始执行监控任务
+2025-02-27T03:22:06.314569Z  INFO traeatc: 开始执行故障检测任务
+ run_cycle ...2025-02-27T03:22:06.314616Z  INFO traeatc: 等待所有任务完成
+2025-02-27T03:22:06.314622Z  INFO traeatc::control::manager: 循环：Fixed
+2025-02-27T03:22:06.314661Z  INFO traeatc::control::manager: 定周期控制...
+2025-02-27T03:22:06.314695Z  INFO traeatc::control::manager: 定周期控制1...
+2025-02-27T03:22:06.314730Z  INFO traeatc::control::manager: 定周期控制2...
+2025-02-27T03:22:06.314770Z  INFO traeatc::control::manager: 定周期控制3...
+2025-02-27T03:22:06.314803Z  INFO traeatc::control::manager: 定周期控制6...
+2025-02-27T03:22:06.314836Z  INFO traeatc::control::manager: 输出到硬件
+2025-02-27T03:22:06.314867Z  INFO traeatc::control::manager: 输出到硬件1
+2025-02-27T03:22:06.314916Z  INFO traeatc::control::manager: 输出到硬件2
+2025-02-27T03:22:06.314953Z  INFO traeatc::control::manager: 输出到硬件3
+2025-02-27T03:22:06.314981Z  INFO traeatc::control::manager: 输出到硬件4
+2025-02-27T03:22:06.327833Z  INFO traeatc::control::manager: 输出到硬件5
+2025-02-27T03:22:06.327921Z  INFO traeatc::control::manager: 定周期控制7...
+2025-02-27T03:22:06.379044Z  INFO traeatc: 所有任务执行完成
+运行时间: 0秒 266753667纳秒2025-02-27T03:22:06.379108Z  INFO traeatc: 等待任务触发...
+2025-02-27T03:22:06.414573Z  INFO traeatc: 定时器触发，准备执行任务
+2025-02-27T03:22:06.414657Z  INFO traeatc: 开始执行控制任务
+2025-02-27T03:22:06.414744Z  INFO traeatc: 开始执行监控任务
+2025-02-27T03:22:06.414808Z  INFO traeatc: 开始执行故障检测任务
+ run_cycle ...2025-02-27T03:22:06.414933Z  INFO traeatc::control::manager: 循环：Fixed
+2025-02-27T03:22:06.414978Z  INFO traeatc::control::manager: 定周期控制...
+2025-02-27T03:22:06.415018Z  INFO traeatc::control::manager: 定周期控制1...
+2025-02-27T03:22:06.415137Z  INFO traeatc::control::manager: 定周期控制2...
+2025-02-27T03:22:06.414981Z  INFO traeatc: 等待所有任务完成
+2025-02-27T03:22:06.415183Z  INFO traeatc::control::manager: 定周期控制3...
+2025-02-27T03:22:06.415326Z  INFO traeatc::control::manager: 定周期控制6...
+2025-02-27T03:22:06.415358Z  INFO traeatc::control::manager: 输出到硬件
+2025-02-27T03:22:06.415394Z  INFO traeatc::control::manager: 输出到硬件1
+2025-02-27T03:22:06.415709Z  INFO traeatc::control::manager: 输出到硬件2
+2025-02-27T03:22:06.415754Z  INFO traeatc::control::manager: 输出到硬件3
+2025-02-27T03:22:06.415783Z  INFO traeatc::control::manager: 输出到硬件4
+2025-02-27T03:22:06.427850Z  INFO traeatc::control::manager: 输出到硬件5
+2025-02-27T03:22:06.427926Z  INFO traeatc::control::manager: 定周期控制7...
+2025-02-27T03:22:06.479089Z  INFO traeatc: 所有任务执行完成
+运行时间: 0秒 366807667纳秒2025-02-27T03:22:06.479157Z  INFO traeatc: 等待任务触发...
+
 
 ```

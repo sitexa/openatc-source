@@ -2,6 +2,7 @@ use std::io;
 use std::io::Write;
 use std::sync::Arc;
 use std::time::Instant;
+use futures::future;
 use tokio::time::Duration;
 use tracing::{error, info, Level};
 use tracing_subscriber::FmtSubscriber;
@@ -78,39 +79,60 @@ async fn main() {
 
     info!("信号控制系统已启动");
 
-    let start_time = Instant::now(); // 记录程序开始时间
+    let start_time = Instant::now(); 
+    info!("开始创建定时器...");
     let mut interval = tokio::time::interval(Duration::from_millis(100)); // 设置100ms的执行周期
+    info!("定时器创建完成");
 
     // 主循环
     loop {
+        info!("等待任务触发...");
         tokio::select! {
             // 等待定时器触发
             _ = interval.tick() => {
+                info!("定时器触发，准备执行任务");
                 // Clone Arc references for each task
                 let control = control.clone();
                 let monitor = monitor.clone();
                 let fault = fault.clone();
 
-                // 异步启动所有任务
-                tokio::spawn(async move{
+                info!("开始执行控制任务");
+                let control_task = tokio::spawn(async move {
                     if let Err(e) = control.run_cycle().await {
                         error!("控制循环执行失败: {:?}", e);
                     }
                 });
-                
-                tokio::spawn(async move{
+
+                info!("开始执行监控任务");
+                let monitor_task = tokio::spawn(async move {
                     if let Err(e) = monitor.update().await {
                         error!("监控更新失败: {:?}", e);
                     }
                 });
-                
-                tokio::spawn(async move{
+
+                info!("开始执行故障检测任务");
+                let fault_task = tokio::spawn(async move {
                     if let Err(e) = fault.monitor_faults().await {
                         error!("故障检测失败: {:?}", e);
                     }
                 });
 
-                // 计算并显示运行时间
+                info!("等待所有任务完成");
+                let results = futures::future::join_all(vec![
+                    control_task,
+                    monitor_task,
+                    fault_task
+                ]).await;
+                
+                // 检查任务执行结果
+                for (i, result) in results.iter().enumerate() {
+                    if let Err(e) = result {
+                        error!("任务 {} 执行失败: {:?}", i, e);
+                    }
+                }
+
+                info!("所有任务执行完成");
+
                 let elapsed = start_time.elapsed();
                 print!("\r运行时间: {}秒 {}纳秒", elapsed.as_secs(), elapsed.subsec_nanos());
                 io::stdout().flush().unwrap();

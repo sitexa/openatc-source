@@ -1,4 +1,6 @@
 use std::collections::HashMap;
+use std::io;
+use std::io::Write;
 use std::ops::Deref;
 use super::{error::{ControlError, ControlResult}, types::*};
 use crate::hardware::HardwareManager;
@@ -56,9 +58,14 @@ impl ControlManager {
     }
 
     pub async fn run_cycle(&self) -> ControlResult<()> {
-        let state = self.state.lock().await;
         print!("\r run_cycle ...");
-        match state.mode {
+        let mode = {
+            let state = self.state.lock().await;
+            state.mode
+        };
+        info!("循环：{:?}",mode);
+
+        match mode {
             ControlMode::Fixed => self.run_fixed_time_cycle().await,
             ControlMode::Vehicle => self.run_vehicle_responsive_cycle().await,
             ControlMode::Flash => self.run_flash_mode().await,
@@ -113,49 +120,98 @@ impl ControlManager {
     }
 
     async fn update_outputs(&self) -> ControlResult<()> {
-        let state = self.state.lock().await;
-        let phases = self.phases.lock().await;
+        info!("输出到硬件");
+        let state_data = {
+            let state = self.state.lock().await;
+            (state.mode, state.current_plan, state.phase_elapsed_time)
+        };
+        info!("输出到硬件1");
+        let phases_data = {
+            let phases = self.phases.lock().await;
+            phases.iter().map(|(id, phase)| (*id, phase.clone())).collect::<Vec<_>>()
+        };
+        info!("输出到硬件2");
+        let plans_data = {
+            let plans = self.timing_plans.lock().await;
+            plans.get(&state_data.1).cloned()
+        };
 
-        for (phase_id, phase) in phases.iter() {
-            match self.get_phase_status(*phase_id, &state, phases.deref()).await {
-                Ok(status) => {
-                    if let Err(e) = self.hardware.update_phase_output(*phase_id, status).await {
-                        return Err(ControlError::HardwareError(e.to_string()));  // 返回错误而不是继续
+        for (phase_id, phase) in phases_data {  // Remove .iter()
+            info!("输出到硬件3");
+            let status = if let Some(plan) = &plans_data {
+                if let Some(phase_config) = plan.phases.iter().find(|p| p.phase_id == phase_id) {  // phase_id is now u32
+                    let elapsed = state_data.2 as u64;
+
+                    if elapsed < phase_config.split.as_secs() {
+                        PhaseState::Green
+                    } else if elapsed < phase_config.split.as_secs() + phase.yellow_time.as_secs() {
+                        PhaseState::Yellow
+                    } else {
+                        PhaseState::Red
                     }
+                } else {
+                    PhaseState::Red
                 }
-                Err(e) => {
-                    return Err(e);  // 返回错误而不是继续
-                }
+            } else {
+                PhaseState::Red
+            };
+
+            info!("输出到硬件4");
+            if let Err(e) = self.hardware.update_phase_output(phase_id, status).await {  // phase_id is now u32
+                return Err(ControlError::HardwareError(e.to_string()));
             }
         }
+        info!("输出到硬件5");
 
         Ok(())
     }
 
     async fn run_fixed_time_cycle(&self) -> ControlResult<()> {
-        let mut state = self.state.lock().await;
-        let plans = self.timing_plans.lock().await;
+        info!("定周期控制...");
+        
+        // 获取并更新状态
+        let (current_plan, need_switch) = {
+            let mut state = self.state.lock().await;
+            info!("定周期控制1...");
+            
+            let plans = self.timing_plans.lock().await;
+            info!("定周期控制2...");
+            
+            let mut need_switch = false;
+            
+            if let Some(plan) = plans.get(&state.current_plan) {
+                info!("定周期控制3...");
+                state.cycle_elapsed_time += 1;
+                state.phase_elapsed_time += 1;
 
-        if let Some(plan) = plans.get(&state.current_plan) {
-            state.cycle_elapsed_time += 1;
-            state.phase_elapsed_time += 1;
+                if let Some(current_phase) = plan.phases.iter()
+                    .find(|p| p.phase_id == state.current_phase) {
+                    info!("定周期控制4...");
+                    if state.phase_elapsed_time as u64 >= current_phase.split.as_secs() {
+                        info!("定周期控制5...");
+                        need_switch = true;
+                    }
+                }
 
-            // 检查是否需要切换相位
-            if let Some(current_phase) = plan.phases.iter()
-                .find(|p| p.phase_id == state.current_phase) {
-                if state.phase_elapsed_time as u64 >= current_phase.split.as_secs() {
-                    // 切换到下一个相位
-                    self.switch_to_next_phase(&mut state, plan).await?;
+                if state.cycle_elapsed_time as u64 >= plan.cycle_length.as_secs() {
+                    state.cycle_elapsed_time = 0;
                 }
             }
+            (state.current_plan, need_switch)
+        };  // 这里释放所有锁
 
-            // 检查周期是否结束
-            if state.cycle_elapsed_time as u64 >= plan.cycle_length.as_secs() {
-                state.cycle_elapsed_time = 0;
+        // 如果需要切换相位，单独处理
+        if need_switch {
+            let mut state = self.state.lock().await;
+            let plans = self.timing_plans.lock().await;
+            if let Some(plan) = plans.get(&current_plan) {
+                self.switch_to_next_phase(&mut state, plan).await?;
             }
         }
 
+        info!("定周期控制6...");
         self.update_outputs().await?;
+        info!("定周期控制7...");
         Ok(())
     }
 
