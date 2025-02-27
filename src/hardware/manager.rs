@@ -141,12 +141,11 @@ impl HardwareManager {
     pub async fn update_phase_output(&self, phase_id: u32, state: PhaseState) -> HardwareResult<()> {
         // 将相位状态转换为CAN消息
         let message = self.create_phase_output_message(phase_id, state)?;
-
         // 获取CAN连接锁
         let can = self.can_connection.lock().await;
-
         // 通过CAN总线发送消息
         let result = can.send_message(message).await;
+        info!("更新相位输出:result:{:?}",result);
         match result {
             Ok(_) => {
                 Ok(())

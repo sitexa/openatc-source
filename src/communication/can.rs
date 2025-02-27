@@ -96,11 +96,22 @@ impl CanSocket for MockCanSocket {
 impl CanConnection {
     pub async fn new(interface: &str) -> CommResult<Self> {
         let socket: Box<dyn CanSocket + Send> = if interface.starts_with("mock") {
-            // 创建 Mock Socket，只使用一对通道
-            let (tx, rx) = mpsc::channel(100);
+            // 增大通道容量或使用无界通道
+            let (tx, rx) = mpsc::channel(1000);
+
+            // 创建消费者任务
+            let rx_clone = Arc::new(Mutex::new(rx));
+            let rx_for_task = rx_clone.clone();
+            tokio::spawn(async move {
+                loop {
+                    let mut rx = rx_for_task.lock().await;
+                    let _ = rx.recv().await;  // 持续消费消息
+                }
+            });
+
             Box::new(MockCanSocket {
-                tx: tx.clone(),  // 克隆发送端
-                rx: Arc::new(Mutex::new(rx)),  // 接收端
+                tx: tx.clone(),
+                rx: rx_clone,
             })
         } else {
             // 创建真实 Socket

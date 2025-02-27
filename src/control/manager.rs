@@ -58,7 +58,7 @@ impl ControlManager {
     }
 
     pub async fn run_cycle(&self) -> ControlResult<()> {
-        print!("\r run_cycle ...");
+        info!("run_cycle ...");
         let mode = {
             let state = self.state.lock().await;
             state.mode
@@ -125,19 +125,16 @@ impl ControlManager {
             let state = self.state.lock().await;
             (state.mode, state.current_plan, state.phase_elapsed_time)
         };
-        info!("输出到硬件1");
         let phases_data = {
             let phases = self.phases.lock().await;
             phases.iter().map(|(id, phase)| (*id, phase.clone())).collect::<Vec<_>>()
         };
-        info!("输出到硬件2");
         let plans_data = {
             let plans = self.timing_plans.lock().await;
             plans.get(&state_data.1).cloned()
         };
 
         for (phase_id, phase) in phases_data {  // Remove .iter()
-            info!("输出到硬件3");
             let status = if let Some(plan) = &plans_data {
                 if let Some(phase_config) = plan.phases.iter().find(|p| p.phase_id == phase_id) {  // phase_id is now u32
                     let elapsed = state_data.2 as u64;
@@ -156,40 +153,33 @@ impl ControlManager {
                 PhaseState::Red
             };
 
-            info!("输出到硬件4");
-            if let Err(e) = self.hardware.update_phase_output(phase_id, status).await {  // phase_id is now u32
+            if let Err(e) = self.hardware.update_phase_output(phase_id, status).await {
                 return Err(ControlError::HardwareError(e.to_string()));
             }
         }
-        info!("输出到硬件5");
 
         Ok(())
     }
 
     async fn run_fixed_time_cycle(&self) -> ControlResult<()> {
-        info!("定周期控制...");
-        
+        info!("定周期控制1...");
+
         // 获取并更新状态
         let (current_plan, need_switch) = {
             let mut state = self.state.lock().await;
-            info!("定周期控制1...");
-            
             let plans = self.timing_plans.lock().await;
-            info!("定周期控制2...");
-            
             let mut need_switch = false;
-            
+            info!("定周期控制2,state:{:?}",state);
             if let Some(plan) = plans.get(&state.current_plan) {
-                info!("定周期控制3...");
                 state.cycle_elapsed_time += 1;
                 state.phase_elapsed_time += 1;
-
+                info!("定周期控制3,plan:{:?}",plan);
                 if let Some(current_phase) = plan.phases.iter()
                     .find(|p| p.phase_id == state.current_phase) {
-                    info!("定周期控制4...");
+                    info!("定周期控制4,phase:{:?}",current_phase);
                     if state.phase_elapsed_time as u64 >= current_phase.split.as_secs() {
-                        info!("定周期控制5...");
                         need_switch = true;
+                        info!("定周期控制5,need_switch:{:?}",need_switch);
                     }
                 }
 
@@ -202,16 +192,18 @@ impl ControlManager {
 
         // 如果需要切换相位，单独处理
         if need_switch {
+            info!("定周期控制6,to need_switch");
             let mut state = self.state.lock().await;
             let plans = self.timing_plans.lock().await;
             if let Some(plan) = plans.get(&current_plan) {
+                info!("定周期控制7,switch_to_next_phase");
                 self.switch_to_next_phase(&mut state, plan).await?;
             }
         }
 
-        info!("定周期控制6...");
+        info!("定周期控制8,update_outputs");
         self.update_outputs().await?;
-        info!("定周期控制7...");
+        info!("定周期控制9,完成");
         Ok(())
     }
 
